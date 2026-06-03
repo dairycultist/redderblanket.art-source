@@ -51,8 +51,14 @@ function onRequest(req, res) {
 			for (const x of articleData.mods)
 				mods += articleCardTemplate.replace("insert_header.img", x.headerImage).replace("<!-- insert title -->", x.title).replace("<!-- insert description -->", x.description).replace("insert-download-is-flex-or-none", "flex");
 
+			for (let i = 0; i < (3 - articleData.mods.length % 3) % 3; i++)
+				mods += "<div class='fake-article'></div>";
+
 			for (const x of articleData.projects)
 				projects += articleCardTemplate.replace("insert_header.img", x.headerImage).replace("<!-- insert title -->", x.title).replace("<!-- insert description -->", x.description).replace("insert-download-is-flex-or-none", "none");
+
+			for (let i = 0; i < (3 - articleData.projects.length % 3) % 3; i++)
+				projects += "<div class='fake-article'></div>";
 
 			let page = fs.readFileSync("home.html", "utf-8");
 			page = page.replace("<!-- insert mods -->", mods);
