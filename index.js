@@ -62,7 +62,7 @@ function onRequest(req, res) {
 			res.end(
 				fs.readFileSync("article.html", "utf-8")
 				.replace("insert_header.img", articleData.mods[i].headerImage)
-				.replace("<!-- insert title -->", articleData.mods[i].title)
+				.replaceAll("<!-- insert title -->", articleData.mods[i].title)
 				.replace("<!-- insert article body -->", articleData.mods[i].articleBody)
 				.replace("insert-download-is-flex-or-none", "flex")
 				.replace("insert/download/url", articleData.mods[i].downloadUrl)
@@ -80,7 +80,7 @@ function onRequest(req, res) {
 			res.end(
 				fs.readFileSync("article.html", "utf-8")
 				.replace("insert_header.img", articleData.projects[i].headerImage)
-				.replace("<!-- insert title -->", articleData.projects[i].title)
+				.replaceAll("<!-- insert title -->", articleData.projects[i].title)
 				.replace("<!-- insert article body -->", articleData.projects[i].articleBody)
 				.replace("insert-download-is-flex-or-none", "none")
 			);
