@@ -33,6 +33,8 @@
 		a.grey { background: none; }
 		a.grey:hover { background: #444; }
 
+		a.grey:has(+ a.green[style*="display: none;"]) { transform: translateX(6px); } /* scuffed css trickery */
+
 		/* mobile/narrow monitors */
 		@media (width <= 1124px) {
 			.fake-article:last-of-type { display: none; }
