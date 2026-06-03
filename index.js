@@ -1,22 +1,5 @@
 const fs = require("fs");
 
-const articleData = {
-	mods: [
-		{
-			headerImage: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f7195997-7848-47de-bc04-bb31e278204f/dlqihiv-f469693c-1808-427f-a2fb-5b07ec7fd585.png/v1/fill/w_857,h_933,q_70,strp/alien_oc_again_by_redderblanket_dlqihiv-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTgwIiwicGF0aCI6Ii9mL2Y3MTk1OTk3LTc4NDgtNDdkZS1iYzA0LWJiMzFlMjc4MjA0Zi9kbHFpaGl2LWY0Njk2OTNjLTE4MDgtNDI3Zi1hMmZiLTViMDdlYzdmZDU4NS5wbmciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.Y9AVEhMC87dzSdUCX5tnL5HzaIv72ZQoz9aSFZAzptE",
-			title: "Fat balatro cards",
-			description: "balatro balatrez"
-		}
-	],
-	projects: [
-		{
-			headerImage: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f7195997-7848-47de-bc04-bb31e278204f/dlqihiv-f469693c-1808-427f-a2fb-5b07ec7fd585.png/v1/fill/w_857,h_933,q_70,strp/alien_oc_again_by_redderblanket_dlqihiv-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTgwIiwicGF0aCI6Ii9mL2Y3MTk1OTk3LTc4NDgtNDdkZS1iYzA0LWJiMzFlMjc4MjA0Zi9kbHFpaGl2LWY0Njk2OTNjLTE4MDgtNDI3Zi1hMmZiLTViMDdlYzdmZDU4NS5wbmciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.Y9AVEhMC87dzSdUCX5tnL5HzaIv72ZQoz9aSFZAzptE",
-			title: "Sci-fi world",
-			description: "my generic gooner sci-fi fantasy"
-		}
-	]
-};
-
 if (process.argv.includes("--insecure")) {
 
 	console.log("\nOpening on HTTP (--insecure)");
@@ -43,19 +26,20 @@ function onRequest(req, res) {
 			
 			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
 
+			const articleData = JSON.parse(fs.readFileSync("article_data.json", "utf-8"));
 			const articleCardTemplate = fs.readFileSync("article_card.htm", "utf-8");
 
 			let mods = "";
 			let projects = "";
 
-			for (const x of articleData.mods)
-				mods += articleCardTemplate.replace("insert_header.img", x.headerImage).replace("<!-- insert title -->", x.title).replace("<!-- insert description -->", x.description).replace("insert-download-is-flex-or-none", "flex");
+			for (const i in articleData.mods)
+				mods += articleCardTemplate.replace("insert_header.img", articleData.mods[i].headerImage).replace("<!-- insert title -->", articleData.mods[i].title).replace("<!-- insert description -->", articleData.mods[i].description).replace("insert-download-is-flex-or-none", "flex").replace("insert/page/url", "/mods/" + i);
 
 			for (let i = 0; i < (3 - articleData.mods.length % 3) % 3; i++)
 				mods += "<div class='fake-article'></div>";
 
-			for (const x of articleData.projects)
-				projects += articleCardTemplate.replace("insert_header.img", x.headerImage).replace("<!-- insert title -->", x.title).replace("<!-- insert description -->", x.description).replace("insert-download-is-flex-or-none", "none");
+			for (const i in articleData.projects)
+				projects += articleCardTemplate.replace("insert_header.img", articleData.projects[i].headerImage).replace("<!-- insert title -->", articleData.projects[i].title).replace("<!-- insert description -->", articleData.projects[i].description).replace("insert-download-is-flex-or-none", "none").replace("insert/page/url", "/projects/" + i);
 
 			for (let i = 0; i < (3 - articleData.projects.length % 3) % 3; i++)
 				projects += "<div class='fake-article'></div>";
@@ -65,11 +49,44 @@ function onRequest(req, res) {
 			page = page.replace("<!-- insert art projects -->", projects);
 
 			res.end(page);
+
+		} else if (req.url.startsWith("/mods/")) {
+
+			const i = req.url.substring(6);
+			const articleData = JSON.parse(fs.readFileSync("article_data.json", "utf-8"));
+
+			if (articleData.mods[i] == undefined)
+				return err404(req, res);
+
+			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+			res.end(
+				fs.readFileSync("article.html", "utf-8")
+				.replace("insert_header.img", articleData.mods[i].headerImage)
+				.replace("<!-- insert title -->", articleData.mods[i].title)
+				.replace("<!-- insert article body -->", articleData.mods[i].articleBody)
+				.replace("insert-download-is-flex-or-none", "flex")
+			);
+
+		} else if (req.url.startsWith("/projects/")) {
+
+			const i = req.url.substring(10);
+			const articleData = JSON.parse(fs.readFileSync("article_data.json", "utf-8"));
+
+			if (articleData.projects[i] == undefined)
+				return err404(req, res);
+
+			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+			res.end(
+				fs.readFileSync("article.html", "utf-8")
+				.replace("insert_header.img", articleData.projects[i].headerImage)
+				.replace("<!-- insert title -->", articleData.projects[i].title)
+				.replace("<!-- insert article body -->", articleData.projects[i].articleBody)
+				.replace("insert-download-is-flex-or-none", "none")
+			);
 		
 		} else {
 			
-			res.writeHead(404, { "Content-Type": "text/plain" });
-			res.end(req.url + " Not Found");
+			err404(req, res);
 		}
 
 	} else {
@@ -77,4 +94,10 @@ function onRequest(req, res) {
 		res.writeHead(501, { "Content-Type": "text/plain; charset=utf-8" });
 		res.end("501 Not Implemented");
 	}
+}
+
+function err404(req, res) {
+
+	res.writeHead(404, { "Content-Type": "text/plain" });
+	res.end(req.url + " Not Found");
 }
