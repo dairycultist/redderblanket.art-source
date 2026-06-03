@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>dairycultist.dev</title>
+	<title>RedderBlanket</title>
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
@@ -16,17 +16,20 @@
 		header img, header h1 { border-radius: 4px; transform: translateY(69px); }
 	
 		/* articles */
-		article { width: 280px; aspect-ratio: 1; background: #1c1e23; border: 1px solid #484848; border-radius: 0.5em; overflow: hidden; }
+		gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 1rem; }
+
+		article { aspect-ratio: 1; background: #1c1e23; border: 1px solid #484848; border-radius: 0.5em; overflow: hidden; }
 		article img { width: 100%; height: 50%; object-fit: cover; object-position: center top; }
 		article div { padding: 0.5em 1em; }
-		article h3 { margin: 0; display: flex; align-items: center; gap: 4px; }
+		article h3 { font-size: 1em; margin: 0; display: flex; align-items: center; gap: 4px; }
+		article p { margin: 0.35em 0; }
 		
 		/* cool buttons*/
-		article button.green, article button.grey { cursor: pointer; border: 0; width: 34px; height: 32px; border-radius: 2px; display: flex; justify-content: center; align-items: center; }
-		article button.green { background: #03fc9d; }
-		article button.green:hover { background: #8effa1; }
-		article button.grey { background: none; }
-		article button.grey:hover { background: #444; }
+		a.green, a.grey { cursor: pointer; border: 0; flex: 34px 0 0; width: 34px; height: 32px; border-radius: 2px; display: flex; justify-content: center; align-items: center; }
+		a.green { background: #03fc9d; }
+		a.green:hover { background: #8effa1; }
+		a.grey { background: none; }
+		a.grey:hover { background: #444; }
 	</style>
 </head>
 <body>
@@ -44,24 +47,14 @@
 
 	<main>
 		<h2>Mods</h2>
-		<article>
-			<img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/f7195997-7848-47de-bc04-bb31e278204f/dlqihiv-f469693c-1808-427f-a2fb-5b07ec7fd585.png/v1/fill/w_857,h_933,q_70,strp/alien_oc_again_by_redderblanket_dlqihiv-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTgwIiwicGF0aCI6Ii9mL2Y3MTk1OTk3LTc4NDgtNDdkZS1iYzA0LWJiMzFlMjc4MjA0Zi9kbHFpaGl2LWY0Njk2OTNjLTE4MDgtNDI3Zi1hMmZiLTViMDdlYzdmZDU4NS5wbmciLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.Y9AVEhMC87dzSdUCX5tnL5HzaIv72ZQoz9aSFZAzptE">
-			<div>
-				<h3>
-					Sci-fi world
-					<div style="flex: 1;"></div>
-					<button class="grey">
-						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cccccc"><path d="M440-280h80v-240h-80v240Zm68.5-331.5Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
-					</button>
-					<button class="green">
-						<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1c1e23"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
-					</button>
-				</h3>
-				<p>my generic gooner sci-fi fantasy</p>
-			</div>
-		</article>
+		<gallery>
+			<!-- insert mods -->
+		</gallery>
 
 		<h2>Art projects</h2>
+		<gallery>
+			<!-- insert art projects -->
+		</gallery>
 	</main>
 </body>
 </html>
