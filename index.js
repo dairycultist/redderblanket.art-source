@@ -33,7 +33,7 @@ function onRequest(req, res) {
 			let projects = "";
 
 			for (const i in articleData.mods)
-				mods += articleCardTemplate.replace("insert_header.img", articleData.mods[i].headerImage).replace("<!-- insert title -->", articleData.mods[i].title).replace("<!-- insert description -->", articleData.mods[i].description).replace("insert-download-is-flex-or-none", "flex").replace("insert/page/url", "/mods/" + i);
+				mods += articleCardTemplate.replace("insert_header.img", articleData.mods[i].headerImage).replace("<!-- insert title -->", articleData.mods[i].title).replace("<!-- insert description -->", articleData.mods[i].description).replace("insert-download-is-flex-or-none", "flex").replace("insert/page/url", "/mods/" + i).replace("insert/download/url", articleData.mods[i].downloadUrl);
 
 			for (let i = 0; i < (3 - articleData.mods.length % 3) % 3; i++)
 				mods += "<div class='fake-article'></div>";
@@ -65,6 +65,7 @@ function onRequest(req, res) {
 				.replace("<!-- insert title -->", articleData.mods[i].title)
 				.replace("<!-- insert article body -->", articleData.mods[i].articleBody)
 				.replace("insert-download-is-flex-or-none", "flex")
+				.replace("insert/download/url", articleData.mods[i].downloadUrl)
 			);
 
 		} else if (req.url.startsWith("/projects/")) {
