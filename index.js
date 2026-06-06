@@ -35,13 +35,13 @@ function onRequest(req, res) {
 			for (const i in articleData.mods)
 				mods += articleCardTemplate.replace("insert_header.img", articleData.mods[i].headerImage).replace("<!-- insert title -->", articleData.mods[i].title).replace("<!-- insert description -->", articleData.mods[i].description).replace("insert-download-is-flex-or-none", "flex").replace("insert/page/url", "/mods/" + i).replace("insert/download/url", articleData.mods[i].downloadUrl);
 
-			for (let i = 0; i < (3 - articleData.mods.length % 3) % 3; i++)
+			for (let i = 0; i < (3 - Object.keys(articleData.mods).length % 3) % 3; i++)
 				mods += "<div class='fake-article'></div>";
 
 			for (const i in articleData.projects)
 				projects += articleCardTemplate.replace("insert_header.img", articleData.projects[i].headerImage).replace("<!-- insert title -->", articleData.projects[i].title).replace("<!-- insert description -->", articleData.projects[i].description).replace("insert-download-is-flex-or-none", "none").replace("insert/page/url", "/projects/" + i);
 
-			for (let i = 0; i < (3 - articleData.projects.length % 3) % 3; i++)
+			for (let i = 0; i < (3 - Object.keys(articleData.projects).length % 3) % 3; i++)
 				projects += "<div class='fake-article'></div>";
 
 			let page = fs.readFileSync("home.html", "utf-8");
@@ -106,8 +106,8 @@ function err404(req, res) {
 function getArticles() {
 
 	const articles = {
-		mods: [],
-		projects: []
+		mods: {},
+		projects: {}
 	};
 
 	for (const file of fs.readdirSync("./mods")) {
@@ -118,7 +118,7 @@ function getArticles() {
 
 		parts[0].articleBody = parts[1];
 
-		articles.mods.push(parts[0]);
+		articles.mods[file.split(".")[0]] = parts[0];
 	}
 
 	for (const file of fs.readdirSync("./projects")) {
@@ -129,7 +129,7 @@ function getArticles() {
 
 		parts[0].articleBody = parts[1];
 
-		articles.projects.push(parts[0]);
+		articles.projects[file.split(".")[0]] = parts[0];
 	}
 
 	return articles;
