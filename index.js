@@ -26,7 +26,7 @@ function onRequest(req, res) {
 			
 			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
 
-			const articleData = JSON.parse(fs.readFileSync("article_data.json", "utf-8"));
+			const articleData = getArticles();
 			const articleCardTemplate = fs.readFileSync("article_card.htm", "utf-8");
 
 			let mods = "";
@@ -53,7 +53,7 @@ function onRequest(req, res) {
 		} else if (req.url.startsWith("/mods/")) {
 
 			const i = req.url.substring(6);
-			const articleData = JSON.parse(fs.readFileSync("article_data.json", "utf-8"));
+			const articleData = getArticles();
 
 			if (articleData.mods[i] == undefined)
 				return err404(req, res);
@@ -71,7 +71,7 @@ function onRequest(req, res) {
 		} else if (req.url.startsWith("/projects/")) {
 
 			const i = req.url.substring(10);
-			const articleData = JSON.parse(fs.readFileSync("article_data.json", "utf-8"));
+			const articleData = getArticles();
 
 			if (articleData.projects[i] == undefined)
 				return err404(req, res);
@@ -101,4 +101,36 @@ function err404(req, res) {
 
 	res.writeHead(404, { "Content-Type": "text/plain" });
 	res.end(req.url + " Not Found");
+}
+
+function getArticles() {
+
+	const articles = {
+		mods: [],
+		projects: []
+	};
+
+	for (const file of fs.readdirSync("./mods")) {
+
+		const parts = fs.readFileSync("./mods/" + file, "utf-8").split("<!-- article body below -->");
+
+		parts[0] = JSON.parse(parts[0]);
+
+		parts[0].articleBody = parts[1];
+
+		articles.mods.push(parts[0]);
+	}
+
+	for (const file of fs.readdirSync("./projects")) {
+
+		const parts = fs.readFileSync("./projects/" + file, "utf-8").split("<!-- article body below -->");
+
+		parts[0] = JSON.parse(parts[0]);
+
+		parts[0].articleBody = parts[1];
+
+		articles.projects.push(parts[0]);
+	}
+
+	return articles;
 }
