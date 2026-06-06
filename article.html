@@ -6,25 +6,29 @@
 	<style>
 		@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
-		body { font-family: "Inter", sans-serif; margin: 0 1em 6em 1em; gap: 1em; display: flex; justify-content: center; line-height: 1.5em; background-color: #0e1111; color: #eeeef5; }
+		body { font-family: "Inter", sans-serif; margin: 0; padding-bottom: 6em; gap: 1em; display: flex; flex-direction: column; align-items: center; line-height: 1.5em; background-color: #0e1111; color: #eeeef5; }
 		main { width: 720px; }
 		a { color: #03fc9d; }
 
-		header { background: black; height: 200px; width: 100%; background-size: cover; background-position: center 20%; background-image: url("insert_header.img"); }
+		header { background: black; height: 200px; width: 100%; background-size: cover; background-position: center 40%; background-image: url("insert_header.img"); }
 		
-		h1 { display: flex; margin-top: 0; align-items: center; justify-content: space-between; background: #1c1e23; border-radius: 4px; padding: 0.5em; }
-		h2 { font-size: 1.3em; padding-bottom: 0.2em; }
+		h1 { margin: 1em 0; font-size: 2.5em; display: flex; align-items: center; justify-content: space-between; }
+		h2 { font-size: 1.3em; padding-bottom: 0.35em; margin-top: 2em; border-bottom: 1px solid #484848; }
 
 		/* cool buttons */
-		a.green { font-size: 0.45em; gap: 2px; text-decoration: none; padding: 0 4px 0 8px; color: #1c1e23; background: #03fc9d; cursor: pointer; border: 0; height: 32px; border-radius: 2px; display: flex; justify-content: center; align-items: center; }
+		a.green { font-size: 0.38em; gap: 2px; text-decoration: none; padding: 0 4px 0 8px; color: #1c1e23; background: #03fc9d; cursor: pointer; border: 0; height: 32px; border-radius: 2px; display: flex; justify-content: center; align-items: center; }
 		a.green:hover { background: #8effa1; }
 
-		img { height: 300px; margin: auto; display: block; }
+		figure { text-align: center; margin: 3em 0; }
+		figcaption { margin-top: 1em; color: #999; font-size: 0.9em; }
+		img { max-width: 100%; max-height: 300px; margin: auto; display: block; border: 1px solid #eeeef5; }
+
+		hr { max-width: 4em; margin: 2em auto; color: #484848; }
 	</style>
 </head>
 <body>
+	<header></header>
 	<main>
-		<header></header>
 
 		<p><a href="/" style="text-decoration: none; color: #666;">← Back to homepage</a></p>
 
@@ -36,7 +40,9 @@
             </a>
 		</h1>
 
-		<!-- insert article body -->
+		<div style="background: #1c1e23; padding: 1.5em; border: 1px solid #484848; border-left: 0; border-right: 0;">
+			<!-- insert article body -->
+		</div>
 	</main>
 </body>
 </html>
