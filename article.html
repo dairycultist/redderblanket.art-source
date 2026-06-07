@@ -3,21 +3,24 @@
 <head>
 	<meta charset="UTF-8">
 	<title>RedderBlanket - <!-- insert title --></title>
+	<link rel="icon" type="image/png" href="/favicon.png">
 	<style>
 		@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
+		:root { --accent: #fc4532; }
+
 		body { font-family: "Inter", sans-serif; margin: 0; padding-bottom: 6em; gap: 1em; display: flex; flex-direction: column; align-items: center; line-height: 1.5em; background-color: #0e1111; color: #eeeef5; }
 		main { width: 720px; }
-		a { color: #03fc9d; }
+		a { color: var(--accent); }
 
-		header { background: black; height: 200px; width: 100%; background-size: cover; background-position: center 40%; background-image: url("insert_header.img"); }
+		header { background: var(--accent); height: 200px; width: 100%; background-size: cover; background-position: center 40%; background-image: url("insert_header.img"); }
 		
 		h1 { margin: 1em 0; font-size: 2.5em; display: flex; align-items: center; justify-content: space-between; }
 		h2 { font-size: 1.3em; padding-bottom: 0.35em; margin-top: 2em; border-bottom: 1px solid #484848; }
 
 		/* cool buttons */
-		a.green { font-size: 0.38em; gap: 2px; text-decoration: none; padding: 0 4px 0 8px; color: #1c1e23; background: #03fc9d; cursor: pointer; border: 0; height: 32px; border-radius: 2px; display: flex; justify-content: center; align-items: center; }
-		a.green:hover { background: #8effa1; }
+		a.green { font-size: 0.38em; gap: 2px; text-decoration: none; padding: 0 4px 0 8px; color: #1c1e23; background: var(--accent); cursor: pointer; border: 0; height: 32px; border-radius: 2px; display: flex; justify-content: center; align-items: center; }
+		a.green:hover { background: color-mix(in oklab, var(--accent), black 20%); }
 
 		figure { text-align: center; margin: 3em 0; }
 		figcaption { margin-top: 1em; color: #999; font-size: 0.9em; }

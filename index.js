@@ -85,6 +85,11 @@ function onRequest(req, res) {
 				.replace("insert-download-is-flex-or-none", "none")
 			);
 		
+		} else if (req.url == "/favicon.png") {
+
+			res.writeHead(200, { "Content-Type": "image/png" });
+			res.end(fs.readFileSync("favicon.png"));
+			
 		} else {
 			
 			err404(req, res);
