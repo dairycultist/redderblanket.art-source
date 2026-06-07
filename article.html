@@ -19,12 +19,12 @@
 		h2 { font-size: 1.3em; padding-bottom: 0.35em; margin-top: 2em; border-bottom: 1px solid #484848; }
 
 		/* cool buttons */
-		a.green { font-size: 0.38em; gap: 2px; text-decoration: none; padding: 0 4px 0 8px; color: #1c1e23; background: var(--accent); cursor: pointer; border: 0; height: 32px; border-radius: 2px; display: flex; justify-content: center; align-items: center; }
+		a.green { text-wrap: nowrap; font-size: 0.38em; gap: 2px; text-decoration: none; padding: 0 4px 0 8px; color: #1c1e23; background: var(--accent); cursor: pointer; border: 0; height: 32px; border-radius: 2px; display: flex; justify-content: center; align-items: center; }
 		a.green:hover { background: color-mix(in oklab, var(--accent), black 20%); }
 
 		figure { text-align: center; margin: 3em 0; }
 		figcaption { margin-top: 1em; color: #999; font-size: 0.9em; }
-		img { max-width: 100%; max-height: 300px; margin: auto; display: block; border: 1px solid #eeeef5; }
+		figure img { max-width: 100%; max-height: 300px; margin: auto; display: block; border: 1px solid #eeeef5; }
 
 		hr { max-width: 4em; margin: 2em auto; color: #484848; }
 	</style>
@@ -40,6 +40,10 @@
 			<a class="green" href="insert/download/url" style="display: insert-download-is-flex-or-none;">
 				Download
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#1c1e23"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+            </a>
+			<a class="green" href="insert/itchio/url" style="display: insert-itchio-is-flex-or-none; gap: 6px; padding-right: 7px;">
+				Play on itch.io
+                <img src="/itchio.svg" style="width: 75%; height: 75%">
             </a>
 		</h1>
 

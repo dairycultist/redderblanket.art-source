@@ -32,14 +32,42 @@ function onRequest(req, res) {
 			let games = "";
 			let worlds = "";
 
-			for (const id in articleData.games)
-				games += articleCardTemplate.replace("insert_header.img", articleData.games[id].headerImage).replace("<!-- insert title -->", articleData.games[id].title).replace("<!-- insert description -->", articleData.games[id].description).replace("insert-download-is-flex-or-none", "flex").replace("insert/page/url", "/game/" + id).replace("insert/download/url", articleData.games[id].downloadUrl);
+			// insert games/mods articles
+
+			for (const id in articleData.games) {
+
+				let construct = articleCardTemplate
+					.replace("insert_header.img", articleData.games[id].headerImage)
+					.replace("<!-- insert title -->", articleData.games[id].title)
+					.replace("<!-- insert description -->", articleData.games[id].description)
+					.replace("insert/page/url", "/game/" + id);
+				
+				if (articleData.games[id].downloadUrl) {
+					construct = construct
+						.replace("insert-download-is-flex-or-none", "flex")
+						.replace("insert/download/url", articleData.games[id].downloadUrl);
+				} else {
+					construct = construct.replace("insert-download-is-flex-or-none", "none");
+				}
+
+				if (articleData.games[id].itchioUrl) {
+					construct = construct
+						.replace("insert-itchio-is-flex-or-none", "flex")
+						.replace("insert/itchio/url", articleData.games[id].itchioUrl);
+				} else {
+					construct = construct.replace("insert-itchio-is-flex-or-none", "none");
+				}
+				
+				games += construct;
+			}
 
 			for (let i = 0; i < (3 - Object.keys(articleData.games).length % 3) % 3; i++)
 				games += "<div class='fake-article'></div>";
 
+			// insert worldbuilding articles
+
 			for (const id in articleData.worlds)
-				worlds += articleCardTemplate.replace("insert_header.img", articleData.worlds[id].headerImage).replace("<!-- insert title -->", articleData.worlds[id].title).replace("<!-- insert description -->", articleData.worlds[id].description).replace("insert-download-is-flex-or-none", "none").replace("insert/page/url", "/world/" + id);
+				worlds += articleCardTemplate.replace("insert_header.img", articleData.worlds[id].headerImage).replace("<!-- insert title -->", articleData.worlds[id].title).replace("<!-- insert description -->", articleData.worlds[id].description).replace("insert-download-is-flex-or-none", "none").replace("insert-itchio-is-flex-or-none", "none").replace("insert/page/url", "/world/" + id);
 
 			for (let i = 0; i < (3 - Object.keys(articleData.worlds).length % 3) % 3; i++)
 				worlds += "<div class='fake-article'></div>";
@@ -52,21 +80,35 @@ function onRequest(req, res) {
 
 		} else if (req.url.startsWith("/game/")) {
 
-			const i = req.url.substring("/game/".length);
+			const id = req.url.substring("/game/".length);
 			const articleData = getArticles();
 
-			if (articleData.games[i] == undefined)
+			if (articleData.games[id] == undefined)
 				return err404(req, res);
 
+			let construct = fs.readFileSync("article.html", "utf-8")
+				.replace("insert_header.img", articleData.games[id].headerImage)
+				.replaceAll("<!-- insert title -->", articleData.games[id].title)
+				.replace("<!-- insert article body -->", articleData.games[id].articleBody);
+
+			if (articleData.games[id].downloadUrl) {
+				construct = construct
+					.replace("insert-download-is-flex-or-none", "flex")
+					.replace("insert/download/url", articleData.games[id].downloadUrl);
+			} else {
+				construct = construct.replace("insert-download-is-flex-or-none", "none");
+			}
+
+			if (articleData.games[id].itchioUrl) {
+				construct = construct
+					.replace("insert-itchio-is-flex-or-none", "flex")
+					.replace("insert/itchio/url", articleData.games[id].itchioUrl);
+			} else {
+				construct = construct.replace("insert-itchio-is-flex-or-none", "none");
+			}
+
 			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-			res.end(
-				fs.readFileSync("article.html", "utf-8")
-				.replace("insert_header.img", articleData.games[i].headerImage)
-				.replaceAll("<!-- insert title -->", articleData.games[i].title)
-				.replace("<!-- insert article body -->", articleData.games[i].articleBody)
-				.replace("insert-download-is-flex-or-none", "flex")
-				.replace("insert/download/url", articleData.games[i].downloadUrl)
-			);
+			res.end(construct);
 
 		} else if (req.url.startsWith("/world/")) {
 
@@ -89,6 +131,11 @@ function onRequest(req, res) {
 
 			res.writeHead(200, { "Content-Type": "image/png" });
 			res.end(fs.readFileSync("favicon.png"));
+
+		} else if (req.url == "/itchio.svg") {
+
+			res.writeHead(200, { "Content-Type": "image/svg+xml" });
+			res.end(fs.readFileSync("itchio.svg"));
 			
 		} else {
 			
