@@ -132,11 +132,6 @@ function onRequest(req, res) {
 			res.writeHead(200, { "Content-Type": "image/png" });
 			res.end(fs.readFileSync("favicon.png"));
 
-		} else if (req.url == "/itchio.svg") {
-
-			res.writeHead(200, { "Content-Type": "image/svg+xml" });
-			res.end(fs.readFileSync("itchio.svg"));
-			
 		} else {
 			
 			err404(req, res);
