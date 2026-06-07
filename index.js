@@ -29,59 +29,59 @@ function onRequest(req, res) {
 			const articleData = getArticles();
 			const articleCardTemplate = fs.readFileSync("article_card.htm", "utf-8");
 
-			let mods = "";
-			let projects = "";
+			let games = "";
+			let worlds = "";
 
-			for (const i in articleData.mods)
-				mods += articleCardTemplate.replace("insert_header.img", articleData.mods[i].headerImage).replace("<!-- insert title -->", articleData.mods[i].title).replace("<!-- insert description -->", articleData.mods[i].description).replace("insert-download-is-flex-or-none", "flex").replace("insert/page/url", "/mods/" + i).replace("insert/download/url", articleData.mods[i].downloadUrl);
+			for (const id in articleData.games)
+				games += articleCardTemplate.replace("insert_header.img", articleData.games[id].headerImage).replace("<!-- insert title -->", articleData.games[id].title).replace("<!-- insert description -->", articleData.games[id].description).replace("insert-download-is-flex-or-none", "flex").replace("insert/page/url", "/game/" + id).replace("insert/download/url", articleData.games[id].downloadUrl);
 
-			for (let i = 0; i < (3 - Object.keys(articleData.mods).length % 3) % 3; i++)
-				mods += "<div class='fake-article'></div>";
+			for (let i = 0; i < (3 - Object.keys(articleData.games).length % 3) % 3; i++)
+				games += "<div class='fake-article'></div>";
 
-			for (const i in articleData.projects)
-				projects += articleCardTemplate.replace("insert_header.img", articleData.projects[i].headerImage).replace("<!-- insert title -->", articleData.projects[i].title).replace("<!-- insert description -->", articleData.projects[i].description).replace("insert-download-is-flex-or-none", "none").replace("insert/page/url", "/projects/" + i);
+			for (const id in articleData.worlds)
+				worlds += articleCardTemplate.replace("insert_header.img", articleData.worlds[id].headerImage).replace("<!-- insert title -->", articleData.worlds[id].title).replace("<!-- insert description -->", articleData.worlds[id].description).replace("insert-download-is-flex-or-none", "none").replace("insert/page/url", "/world/" + id);
 
-			for (let i = 0; i < (3 - Object.keys(articleData.projects).length % 3) % 3; i++)
-				projects += "<div class='fake-article'></div>";
+			for (let i = 0; i < (3 - Object.keys(articleData.worlds).length % 3) % 3; i++)
+				worlds += "<div class='fake-article'></div>";
 
 			let page = fs.readFileSync("home.html", "utf-8");
-			page = page.replace("<!-- insert mods -->", mods);
-			page = page.replace("<!-- insert art projects -->", projects);
+			page = page.replace("<!-- insert games -->", games);
+			page = page.replace("<!-- insert worlds -->", worlds);
 
 			res.end(page);
 
-		} else if (req.url.startsWith("/mods/")) {
+		} else if (req.url.startsWith("/game/")) {
 
-			const i = req.url.substring(6);
+			const i = req.url.substring("/game/".length);
 			const articleData = getArticles();
 
-			if (articleData.mods[i] == undefined)
+			if (articleData.games[i] == undefined)
 				return err404(req, res);
 
 			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
 			res.end(
 				fs.readFileSync("article.html", "utf-8")
-				.replace("insert_header.img", articleData.mods[i].headerImage)
-				.replaceAll("<!-- insert title -->", articleData.mods[i].title)
-				.replace("<!-- insert article body -->", articleData.mods[i].articleBody)
+				.replace("insert_header.img", articleData.games[i].headerImage)
+				.replaceAll("<!-- insert title -->", articleData.games[i].title)
+				.replace("<!-- insert article body -->", articleData.games[i].articleBody)
 				.replace("insert-download-is-flex-or-none", "flex")
-				.replace("insert/download/url", articleData.mods[i].downloadUrl)
+				.replace("insert/download/url", articleData.games[i].downloadUrl)
 			);
 
-		} else if (req.url.startsWith("/projects/")) {
+		} else if (req.url.startsWith("/world/")) {
 
-			const i = req.url.substring(10);
+			const i = req.url.substring("/world/".length);
 			const articleData = getArticles();
 
-			if (articleData.projects[i] == undefined)
+			if (articleData.worlds[i] == undefined)
 				return err404(req, res);
 
 			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
 			res.end(
 				fs.readFileSync("article.html", "utf-8")
-				.replace("insert_header.img", articleData.projects[i].headerImage)
-				.replaceAll("<!-- insert title -->", articleData.projects[i].title)
-				.replace("<!-- insert article body -->", articleData.projects[i].articleBody)
+				.replace("insert_header.img", articleData.worlds[i].headerImage)
+				.replaceAll("<!-- insert title -->", articleData.worlds[i].title)
+				.replace("<!-- insert article body -->", articleData.worlds[i].articleBody)
 				.replace("insert-download-is-flex-or-none", "none")
 			);
 		
@@ -111,30 +111,30 @@ function err404(req, res) {
 function getArticles() {
 
 	const articles = {
-		mods: {},
-		projects: {}
+		games: {},
+		worlds: {}
 	};
 
-	for (const file of fs.readdirSync("./mods")) {
+	for (const file of fs.readdirSync("./games")) {
 
-		const parts = fs.readFileSync("./mods/" + file, "utf-8").split("<!-- article body below -->");
+		const parts = fs.readFileSync("./games/" + file, "utf-8").split("<!-- article body below -->");
 
 		parts[0] = JSON.parse(parts[0]);
 
 		parts[0].articleBody = parts[1];
 
-		articles.mods[file.split(".")[0]] = parts[0];
+		articles.games[file.split(".")[0]] = parts[0];
 	}
 
-	for (const file of fs.readdirSync("./projects")) {
+	for (const file of fs.readdirSync("./worlds")) {
 
-		const parts = fs.readFileSync("./projects/" + file, "utf-8").split("<!-- article body below -->");
+		const parts = fs.readFileSync("./worlds/" + file, "utf-8").split("<!-- article body below -->");
 
 		parts[0] = JSON.parse(parts[0]);
 
 		parts[0].articleBody = parts[1];
 
-		articles.projects[file.split(".")[0]] = parts[0];
+		articles.worlds[file.split(".")[0]] = parts[0];
 	}
 
 	return articles;
