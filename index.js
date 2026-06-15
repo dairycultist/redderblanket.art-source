@@ -125,6 +125,7 @@ function onRequest(req, res) {
 				.replaceAll("<!-- insert title -->", articleData.worlds[i].title)
 				.replace("<!-- insert article body -->", articleData.worlds[i].articleBody)
 				.replace("insert-download-is-flex-or-none", "none")
+				.replace("insert-itchio-is-flex-or-none", "none")
 			);
 		
 		} else if (req.url.startsWith("/img/") && req.url.endsWith(".png") && req.url.split(".").length == 2) { // no /img/../sensitive_file on us!
