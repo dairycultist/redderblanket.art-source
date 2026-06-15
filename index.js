@@ -127,10 +127,20 @@ function onRequest(req, res) {
 				.replace("insert-download-is-flex-or-none", "none")
 			);
 		
-		} else if (req.url == "/favicon.png") {
+		} else if (req.url.startsWith("/img/") && req.url.endsWith(".png") && req.url.split(".").length == 2) { // no /img/../sensitive_file on us!
 
-			res.writeHead(200, { "Content-Type": "image/png" });
-			res.end(fs.readFileSync("favicon.png"));
+			try {
+
+				const img = fs.readFileSync("." + req.url);
+
+				res.writeHead(200, { "Content-Type": "image/png" });
+				res.end(img);
+
+			} catch (e) {
+				
+				res.writeHead(404, { "Content-Type": "text/plain" });
+				res.end("404 " + req.url + " was not found");
+			}
 
 		} else {
 			
