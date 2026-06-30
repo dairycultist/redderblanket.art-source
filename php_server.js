@@ -55,7 +55,7 @@ function on_request(req, res) {
 	} catch (e) {
 
 		res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
-		res.end(e);
+		res.end(e.message);
 	}
 }
 
