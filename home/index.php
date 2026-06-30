@@ -24,7 +24,7 @@
 
         <div style="display: grid; grid-template-columns: 1fr 1fr;">
             <?php
-                DISPLAY * FROM /art/ CONTAINING @search
+                DISPLAY * FROM /art/ CONTAINING @search:
                 <figure>
                     <img src="[URL]">
                     <figcaption>[FILENAME]</figcaption>

@@ -61,11 +61,20 @@ function on_request(req, res) {
 
 function process_php(text) {
 
+	// DISPLAY * TYPE png/jpg FROM /art/ CONTAINING @search
+	// displays into the data all pngs/jpgs whose filepath is (/home)/art/ and whose filename contains the substring in the query parameter 'search'
+
+	// DISPLAY TYPE png/jpg @image FROM /art/
+	// displays into the data the png/jpg whose filename is the in query parameter 'image' and filepath is (/home)/art/
+
+	// when images are displayed into data, they insert their (public) url into [URL], filename into [FILENAME], and extension into [EXTENSION]
+	// text files can also be displayed into data
+
 	return text.replaceAll(/<\?php\s([^?]*)\?>/g, (all, php) => {
 		
 		php = php.trim();
 
-		const index = php.indexOf("\n");
+		const index = php.indexOf(":");
 
 		// the first line is the code, the rest is data to apply the code to (we're ignoring the code for now)
 		const code = php.substring(0, index);
