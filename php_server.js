@@ -4,7 +4,7 @@ if (process.argv.includes("--insecure")) {
 
 	console.log("\nOpening on HTTP (--insecure)");
 
-	require("node:http").createServer(onRequest).listen(8888, "0.0.0.0", () => { console.log(`Starting @ 127.0.0.1:8888`); });
+	require("node:http").createServer(on_request).listen(8888, "0.0.0.0", () => { console.log(`Starting @ 127.0.0.1:8888`); });
 	
 } else {
 
@@ -13,10 +13,10 @@ if (process.argv.includes("--insecure")) {
 	require("node:https").createServer({
 		key: fs.readFileSync("../private.key.pem"),  // path to ssl PRIVATE key from Porkbun
 		cert: fs.readFileSync("../domain.cert.pem"), // path to ssl certificate from Porkbun
-	}, onRequest).listen(443, "0.0.0.0", () => { console.log(`Starting @ https://redderblanket.art/`); });
+	}, on_request).listen(443, "0.0.0.0", () => { console.log(`Starting @ https://redderblanket.art/`); });
 }
 
-function onRequest(req, res) {
+function on_request(req, res) {
 
 	console.log("\x1b[90m" + req.method + " " + req.url + "\x1b[0m");
 
@@ -35,7 +35,7 @@ function onRequest(req, res) {
 
 				if (filepath.split(".")[1] == "php") {
 
-					file = fs.readFileSync("./home" + filepath, "utf-8");
+					file = process_php(fs.readFileSync("./home" + filepath, "utf-8"));
 					res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
 
 				} else if (filepath.split(".")[1] == "png") {
@@ -69,34 +69,27 @@ function onRequest(req, res) {
 	}
 }
 
-function getArticles() {
+function process_php(text) {
 
-	const articles = {
-		games: {},
-		worlds: {}
-	};
+	return text.replaceAll(/<\?php\s([^?]*)\?>/g, (all, php) => {
+		
+		php = php.trim();
 
-	for (const file of fs.readdirSync("./games")) {
+		const index = php.indexOf("\n");
 
-		const parts = fs.readFileSync("./games/" + file, "utf-8").split("<!-- article body below -->");
+		// the first line is the code, the rest is data to apply the code to (we're ignoring the code for now)
+		const code = php.substring(0, index);
+		const data = php.substring(index + 1);
 
-		parts[0] = JSON.parse(parts[0]);
+		let construct = "";
 
-		parts[0].articleBody = parts[1];
+		const filenames = fs.readdirSync("./home/art/");
 
-		articles.games[file.split(".")[0]] = parts[0];
-	}
+		for (const filename of filenames) {
 
-	for (const file of fs.readdirSync("./worlds")) {
+			construct += data.replace("[URL]", "/art/" + filename).replace("[FILENAME]", filename);
+		}
 
-		const parts = fs.readFileSync("./worlds/" + file, "utf-8").split("<!-- article body below -->");
-
-		parts[0] = JSON.parse(parts[0]);
-
-		parts[0].articleBody = parts[1];
-
-		articles.worlds[file.split(".")[0]] = parts[0];
-	}
-
-	return articles;
+		return construct;
+	}); 
 }

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Title of the document</title>
+    <title>redderblanket</title>
     <style>
         body { background: #8fceff; margin: 0; }
         figure { text-align: center; }
@@ -16,7 +16,7 @@
         <p>I'm a BBW/hyper artist. I want to make more sequences/short webcomics. Drawing makes me happy :)</p>
         <p>I don't like my art's availability being at the whim of some megasite, so I'm soft-launching the migration to MY site that has zero SEO!</p>
 
-        <form action="test.php" style="text-align: center; background: #143b61; padding: 4px;">
+        <form action="index.php" style="text-align: center; background: #143b61; padding: 4px;">
             <input type="text" name="search">
             <input type="submit" value="Search">
         </form>
@@ -24,12 +24,12 @@
 
         <div style="display: grid; grid-template-columns: 1fr 1fr;">
             <?php
-            
+                DISPLAY * FROM /art/ CONTAINING @search
+                <figure>
+                    <img src="[URL]">
+                    <figcaption>[FILENAME]</figcaption>
+                </figure>
             ?>
-            <figure>
-                <img src="https://pbs.twimg.com/media/D1KyZsoX0AEPi67.jpg">
-                <figcaption>isabelle</figcaption>
-            </figure>
         </div>
     </main>
 </body>
