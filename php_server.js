@@ -61,31 +61,21 @@ function on_request(req, res) {
 
 function process_php(text) {
 
-	return text.replaceAll(/<\?php\s([^?]*)\?>/g, (all, php) => {
+	return text.replace(/<\?php\s([^?]*)\?>/g, (all, data) => {
 		
-		php = php.trim();
-
-		const index = php.indexOf("\n") < php.indexOf(" ") ? php.indexOf("\n") : php.indexOf(" ");
-
-		const php_insert_type = php.substring(0, index); // for now there's just gallery, maybe we'll add "lightbox" later
-		const data = php.substring(index + 1).trim();
+		data = data.trim();
 
 		let construct = "";
 
-		if (php_insert_type == "gallery") {
+		for (const filename of fs.readdirSync("./home/art/")) {
 
-			const filenames = fs.readdirSync("./home/art/");
+			// TODO filter out those not included in the search
+			// TODO count how many
 
-			for (const filename of filenames) {
-
-				// TODO filter out those not included in the search
-
-				construct += data.replace("[URL]", "/art/" + filename).replace("[FILENAME]", filename);
-			}
-
-		} else {
-
-			construct += "Unsupported PHP insert type.";
+			construct += data
+				.replaceAll("[URL]", "/art/" + filename)
+				.replaceAll("[FILENAME]", filename.split(".", 1)[0]);
+				// [EXTENSION], [FILESIZE]...
 		}
 
 		return construct;
