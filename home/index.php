@@ -17,10 +17,10 @@
         <p>I don't like my art's availability being at the whim of some megasite, so I'm soft-launching the migration to MY site that has zero SEO!</p>
 
         <form action="index.php" style="text-align: center; background: #143b61; padding: 4px;">
-            <input type="text" name="search">
+            <input type="text" name="search" placeholder="[SEARCH]">
             <input type="submit" value="Search">
         </form>
-        <p style="font-size: smaller; color: grey; text-align: center;">10 results</p>
+        <p style="font-size: smaller; color: grey; text-align: center;">[COUNT] results</p>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr;">
             <?php

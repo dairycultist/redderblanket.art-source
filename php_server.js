@@ -37,7 +37,36 @@ function on_request(req, res) {
 
 		if (filepath.split(".")[1] == "php") {
 
-			file = process_php(fs.readFileSync("./home" + filepath, "utf-8"));
+			file = fs.readFileSync("./home" + filepath, "utf-8");
+
+			let search_filter = req.url.split("?search=")[1];
+			let count = 0;
+
+			file = file.replace(/<\?php\s([^?]*)\?>/g, (all, data) => {
+		
+				data = data.trim();
+
+				let construct = "";
+
+				for (const filename of fs.readdirSync("./home/art/")) {
+
+					// filter out those not included in the search
+					if (search_filter && !filename.includes(search_filter))
+						continue;
+					
+					count++;
+					construct += data
+						.replaceAll("[URL]", "/art/" + filename)
+						.replaceAll("[FILENAME]", filename.split(".", 1)[0]);
+						// [FILESIZE]?
+				}
+
+				return construct;
+			});
+
+			file = file.replace("[COUNT]", count);
+			file = file.replace("[SEARCH]", search_filter || "");
+
 			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
 
 		} else if (filepath.split(".")[1] == "png") {
@@ -57,27 +86,4 @@ function on_request(req, res) {
 		res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
 		res.end(e.message);
 	}
-}
-
-function process_php(text) {
-
-	return text.replace(/<\?php\s([^?]*)\?>/g, (all, data) => {
-		
-		data = data.trim();
-
-		let construct = "";
-
-		for (const filename of fs.readdirSync("./home/art/")) {
-
-			// TODO filter out those not included in the search
-			// TODO count how many
-
-			construct += data
-				.replaceAll("[URL]", "/art/" + filename)
-				.replaceAll("[FILENAME]", filename.split(".", 1)[0]);
-				// [EXTENSION], [FILESIZE]...
-		}
-
-		return construct;
-	}); 
 }
