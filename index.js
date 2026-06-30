@@ -22,130 +22,44 @@ function onRequest(req, res) {
 
 	if (req.method == "GET" || req.method == "HEAD") {
 
-		if (req.url == "/") {
-			
-			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+		let filepath = req.url.split("?", 2)[0];
 
-			const articleData = getArticles();
-			const articleCardTemplate = fs.readFileSync("article_card.htm", "utf-8");
+		if (req.url == "/")
+			filepath = "/index.php";
 
-			let games = "";
-			let worlds = "";
-
-			// insert games/mods articles
-
-			for (const id in articleData.games) {
-
-				let construct = articleCardTemplate
-					.replace("insert_header.img", articleData.games[id].headerImage)
-					.replace("<!-- insert title -->", articleData.games[id].title)
-					.replace("<!-- insert description -->", articleData.games[id].description)
-					.replace("insert/page/url", "/game/" + id);
-				
-				if (articleData.games[id].downloadUrl) {
-					construct = construct
-						.replace("insert-download-is-flex-or-none", "flex")
-						.replace("insert/download/url", articleData.games[id].downloadUrl);
-				} else {
-					construct = construct.replace("insert-download-is-flex-or-none", "none");
-				}
-
-				if (articleData.games[id].itchioUrl) {
-					construct = construct
-						.replace("insert-itchio-is-flex-or-none", "flex")
-						.replace("insert/itchio/url", articleData.games[id].itchioUrl);
-				} else {
-					construct = construct.replace("insert-itchio-is-flex-or-none", "none");
-				}
-				
-				games += construct;
-			}
-
-			for (let i = 0; i < (3 - Object.keys(articleData.games).length % 3) % 3; i++)
-				games += "<div class='fake-article'></div>";
-
-			// insert worldbuilding articles
-
-			for (const id in articleData.worlds)
-				worlds += articleCardTemplate.replace("insert_header.img", articleData.worlds[id].headerImage).replace("<!-- insert title -->", articleData.worlds[id].title).replace("<!-- insert description -->", articleData.worlds[id].description).replace("insert-download-is-flex-or-none", "none").replace("insert-itchio-is-flex-or-none", "none").replace("insert/page/url", "/world/" + id);
-
-			for (let i = 0; i < (3 - Object.keys(articleData.worlds).length % 3) % 3; i++)
-				worlds += "<div class='fake-article'></div>";
-
-			let page = fs.readFileSync("home.html", "utf-8");
-			page = page.replace("<!-- insert games -->", games);
-			page = page.replace("<!-- insert worlds -->", worlds);
-
-			res.end(page);
-
-		} else if (req.url.startsWith("/game/")) {
-
-			const id = req.url.substring("/game/".length);
-			const articleData = getArticles();
-
-			if (articleData.games[id] == undefined)
-				return err404(req, res);
-
-			let construct = fs.readFileSync("article.html", "utf-8")
-				.replace("insert_header.img", articleData.games[id].headerImage)
-				.replaceAll("<!-- insert title -->", articleData.games[id].title)
-				.replace("<!-- insert article body -->", articleData.games[id].articleBody);
-
-			if (articleData.games[id].downloadUrl) {
-				construct = construct
-					.replace("insert-download-is-flex-or-none", "flex")
-					.replace("insert/download/url", articleData.games[id].downloadUrl);
-			} else {
-				construct = construct.replace("insert-download-is-flex-or-none", "none");
-			}
-
-			if (articleData.games[id].itchioUrl) {
-				construct = construct
-					.replace("insert-itchio-is-flex-or-none", "flex")
-					.replace("insert/itchio/url", articleData.games[id].itchioUrl);
-			} else {
-				construct = construct.replace("insert-itchio-is-flex-or-none", "none");
-			}
-
-			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-			res.end(construct);
-
-		} else if (req.url.startsWith("/world/")) {
-
-			const i = req.url.substring("/world/".length);
-			const articleData = getArticles();
-
-			if (articleData.worlds[i] == undefined)
-				return err404(req, res);
-
-			res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-			res.end(
-				fs.readFileSync("article.html", "utf-8")
-				.replace("insert_header.img", articleData.worlds[i].headerImage)
-				.replaceAll("<!-- insert title -->", articleData.worlds[i].title)
-				.replace("<!-- insert article body -->", articleData.worlds[i].articleBody)
-				.replace("insert-download-is-flex-or-none", "none")
-				.replace("insert-itchio-is-flex-or-none", "none")
-			);
-		
-		} else if (req.url.startsWith("/img/") && req.url.endsWith(".png") && req.url.split(".").length == 2) { // no /img/../sensitive_file on us!
+		if (filepath.split(".").length == 2) { // no /img/../sensitive_file on us!
 
 			try {
 
-				const img = fs.readFileSync("." + req.url);
+				let file;
 
-				res.writeHead(200, { "Content-Type": "image/png" });
-				res.end(img);
+				if (filepath.split(".")[1] == "php") {
+
+					file = fs.readFileSync("./home" + filepath, "utf-8");
+					res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+
+				} else if (filepath.split(".")[1] == "png") {
+
+					file = fs.readFileSync("./home" + filepath);
+					res.writeHead(200, { "Content-Type": "image/png" });
+
+				} else {
+
+					throw new Error("Unrecognized file type.");
+				}
+
+				res.end(file);
 
 			} catch (e) {
 				
 				res.writeHead(404, { "Content-Type": "text/plain" });
-				res.end("404 " + req.url + " was not found");
+				res.end("404 " + req.url + " Not Found; " + e);
 			}
 
 		} else {
 			
-			err404(req, res);
+			res.writeHead(403, { "Content-Type": "text/plain" });
+			res.end("403 " + req.url + " Is Not Allowed!");
 		}
 
 	} else {
@@ -153,12 +67,6 @@ function onRequest(req, res) {
 		res.writeHead(501, { "Content-Type": "text/plain; charset=utf-8" });
 		res.end("501 Not Implemented");
 	}
-}
-
-function err404(req, res) {
-
-	res.writeHead(404, { "Content-Type": "text/plain" });
-	res.end(req.url + " Not Found");
 }
 
 function getArticles() {
