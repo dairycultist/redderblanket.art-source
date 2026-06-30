@@ -23,8 +23,7 @@
         <p style="font-size: smaller; color: grey; text-align: center;">10 results</p>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr;">
-            <?php
-                DISPLAY * FROM /art/ CONTAINING @search:
+            <?php gallery
                 <figure>
                     <img src="[URL]">
                     <figcaption>[FILENAME]</figcaption>

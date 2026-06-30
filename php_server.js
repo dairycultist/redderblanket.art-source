@@ -61,32 +61,31 @@ function on_request(req, res) {
 
 function process_php(text) {
 
-	// DISPLAY * TYPE png/jpg FROM /art/ CONTAINING @search
-	// displays into the data all pngs/jpgs whose filepath is (/home)/art/ and whose filename contains the substring in the query parameter 'search'
-
-	// DISPLAY TYPE png/jpg @image FROM /art/
-	// displays into the data the png/jpg whose filename is the in query parameter 'image' and filepath is (/home)/art/
-
-	// when images are displayed into data, they insert their (public) url into [URL], filename into [FILENAME], and extension into [EXTENSION]
-	// text files can also be displayed into data
-
 	return text.replaceAll(/<\?php\s([^?]*)\?>/g, (all, php) => {
 		
 		php = php.trim();
 
-		const index = php.indexOf(":");
+		const index = php.indexOf("\n") < php.indexOf(" ") ? php.indexOf("\n") : php.indexOf(" ");
 
-		// the first line is the code, the rest is data to apply the code to (we're ignoring the code for now)
-		const code = php.substring(0, index);
-		const data = php.substring(index + 1);
+		const php_insert_type = php.substring(0, index); // for now there's just gallery, maybe we'll add "lightbox" later
+		const data = php.substring(index + 1).trim();
 
 		let construct = "";
 
-		const filenames = fs.readdirSync("./home/art/");
+		if (php_insert_type == "gallery") {
 
-		for (const filename of filenames) {
+			const filenames = fs.readdirSync("./home/art/");
 
-			construct += data.replace("[URL]", "/art/" + filename).replace("[FILENAME]", filename);
+			for (const filename of filenames) {
+
+				// TODO filter out those not included in the search
+
+				construct += data.replace("[URL]", "/art/" + filename).replace("[FILENAME]", filename);
+			}
+
+		} else {
+
+			construct += "Unsupported PHP insert type.";
 		}
 
 		return construct;
