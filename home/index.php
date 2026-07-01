@@ -6,11 +6,15 @@
     <style>
         body { background: #8fceff; margin: 0; }
         img { width: 100%; border: 4px outset #eee; box-sizing: border-box; }
-        main { margin: auto; background: white; width: 40em; min-height: 100vh; padding: 1em; }
+        main { margin: auto; background: white; width: 41em; min-height: 100vh; padding: 1em; box-sizing: border-box; }
         a:not([href]) { color: inherit; }
         figure { margin: 0; }
         figcaption, .small { font-size: smaller; color: grey; text-align: center; }
         .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; }
+
+        @media (orientation: portrait) {
+            main { width: 100%; }
+        }
     </style>
 </head>
 <body>
