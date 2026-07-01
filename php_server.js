@@ -26,7 +26,7 @@ function on_request(req, res) {
 			throw new Error("We only do GET and HEAD requests here");
 
 		let filepath = req.url.split("?", 2)[0];
-		let query    = req.url.split("?", 2)[1];
+		let query    = new URLSearchParams(req.url.split("?", 2)[1]);
 
 		if (req.url == "/")
 			filepath = "/index.php";
@@ -71,20 +71,32 @@ function on_request(req, res) {
 function get_php(filepath, query) {
 
 	let file = fs.readFileSync("./home" + filepath, "utf-8");
+	let total = 0;
 
-	let search_filter = query ? query.split("search=")[1] : "";
-	let count = 0;
+	const search_filter = query.get("search") || "";
+	const page_number = Number(query.get("page") || 1);
 
 	file = file.replace(/<\?php\s([^?]*)\?>/g, (all, data) => {
 
 		data = data.trim();
 
 		let construct = "";
+		let count = 0;
 
 		for (const filename of fs.readdirSync("./home/art/")) {
 
-			// filter out those not included in the search
+			// filter out those not included in the search from total
 			if (!filename.includes(search_filter))
+				continue;
+
+			total++;
+
+			// skip later pages
+			if (count == 10)
+				continue;
+
+			// skip previous pages
+			if (total < (page_number - 1) * 10 + 1)
 				continue;
 			
 			count++;
@@ -97,8 +109,14 @@ function get_php(filepath, query) {
 		return construct;
 	});
 
-	file = file.replace("[COUNT]", count);
+	const page_count = Math.ceil(total / 10);
+
+	file = file.replace("[TOTAL]", total);
 	file = file.replace("[SEARCH]", search_filter);
+	file = file.replace("[PREV_PAGE_HREF]", page_number == 1          ? "" : `href="?search=${ search_filter }&page=${ page_number - 1 }"`);
+	file = file.replace("[NEXT_PAGE_HREF]", page_number == page_count ? "" : `href="?search=${ search_filter }&page=${ page_number + 1 }"`);
+	file = file.replace("[PAGE_NUMBER]", page_number);
+	file = file.replace("[PAGE_COUNT]", page_count);
 
 	return file;
 }
