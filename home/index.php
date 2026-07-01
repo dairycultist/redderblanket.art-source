@@ -25,6 +25,7 @@
             <input type="submit" value="Search">
         </form>
         <p class="small">[TOTAL] results</p>
+
         <p class="small">
             <a [PREV_PAGE_HREF]>[<-]</a>
             Page [PAGE_NUMBER]/[PAGE_COUNT]
@@ -41,6 +42,12 @@
                 </a>
             ?>
         </div>
+
+        <p class="small">
+            <a [PREV_PAGE_HREF]>[<-]</a>
+            Page [PAGE_NUMBER]/[PAGE_COUNT]
+            <a [NEXT_PAGE_HREF]>[->]</a>
+        </p>
     </main>
 </body>
 </html>

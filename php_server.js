@@ -75,6 +75,7 @@ function get_php(filepath, query) {
 
 	const search_filter = query.get("search") || "";
 	const page_number = Number(query.get("page") || 1);
+	const entries_per_page = 10;
 
 	file = file.replace(/<\?php\s([^?]*)\?>/g, (all, data) => {
 
@@ -92,11 +93,11 @@ function get_php(filepath, query) {
 			total++;
 
 			// skip later pages
-			if (count == 10)
+			if (count == entries_per_page)
 				continue;
 
 			// skip previous pages
-			if (total < (page_number - 1) * 10 + 1)
+			if (total < (page_number - 1) * entries_per_page + 1)
 				continue;
 			
 			count++;
@@ -109,14 +110,14 @@ function get_php(filepath, query) {
 		return construct;
 	});
 
-	const page_count = Math.ceil(total / 10);
+	const page_count = Math.ceil(total / entries_per_page);
 
-	file = file.replace("[TOTAL]", total);
-	file = file.replace("[SEARCH]", search_filter);
-	file = file.replace("[PREV_PAGE_HREF]", page_number == 1          ? "" : `href="?search=${ search_filter }&page=${ page_number - 1 }"`);
-	file = file.replace("[NEXT_PAGE_HREF]", page_number == page_count ? "" : `href="?search=${ search_filter }&page=${ page_number + 1 }"`);
-	file = file.replace("[PAGE_NUMBER]", page_number);
-	file = file.replace("[PAGE_COUNT]", page_count);
+	file = file.replaceAll("[TOTAL]", total);
+	file = file.replaceAll("[SEARCH]", search_filter);
+	file = file.replaceAll("[PREV_PAGE_HREF]", page_number == 1          ? "" : `href="?search=${ search_filter }&page=${ page_number - 1 }"`);
+	file = file.replaceAll("[NEXT_PAGE_HREF]", page_number == page_count ? "" : `href="?search=${ search_filter }&page=${ page_number + 1 }"`);
+	file = file.replaceAll("[PAGE_NUMBER]", page_number);
+	file = file.replaceAll("[PAGE_COUNT]", page_count);
 
 	return file;
 }
