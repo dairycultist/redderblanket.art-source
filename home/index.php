@@ -11,6 +11,7 @@
         figure { margin: 0; }
         figcaption, .small { font-size: smaller; color: grey; text-align: center; }
         .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; }
+        form { text-align: center; background: #143b61; padding: 4px; }
 
         @media (orientation: portrait) {
             main { width: 100%; }
@@ -23,7 +24,7 @@
         <p>I've been drawing BBW/hyper for roughly 2 years. I especially like public sizediff. I want to make more sequences/short webcomics. I'm a <i>huge</i> perfectionist.</p>
         <p>I'm making this site in part in case DeviantArt screws me over. I don't plan on hosting all my art here, just the art that I'd like people to see, give or take.</p>
 
-        <form action="index.php" style="text-align: center; background: #143b61; padding: 4px;">
+        <form action="index.php">
             <input type="text" name="search" placeholder="[SEARCH]">
             <input type="submit" value="Search">
         </form>
