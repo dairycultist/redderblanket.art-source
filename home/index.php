@@ -7,7 +7,7 @@
         body { background: #8fceff; margin: 0; }
         figure { text-align: center; }
         img { width: 100%; border: 4px outset #eee; }
-        figcaption { font-size: smaller; color: grey; }
+        figcaption { font-size: smaller; color: grey; max-width: 15em; margin: auto; }
         main { margin: auto; background: white; width: 40em; min-height: 100vh; padding: 1em; }
     </style>
 </head>

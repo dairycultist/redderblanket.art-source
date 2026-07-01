@@ -46,6 +46,17 @@ function on_request(req, res) {
 				res.end(fs.readFileSync("./home" + filepath));
 				break;
 
+			case "jpeg":
+			case "jpg":
+				res.writeHead(200, { "Content-Type": "image/jpeg" });
+				res.end(fs.readFileSync("./home" + filepath));
+				break;
+
+			case "gif":
+				res.writeHead(200, { "Content-Type": "image/gif" });
+				res.end(fs.readFileSync("./home" + filepath));
+				break;
+
 			default:
 				throw new Error("Unrecognized file type.");
 		}
