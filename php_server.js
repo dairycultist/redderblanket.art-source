@@ -82,27 +82,16 @@ function get_php(filepath, query) {
 		data = data.trim();
 
 		let construct = "";
-		let count = 0;
 
 		// filter out those not included in the search from total
 		const filenames = fs.readdirSync("./home/art/").filter((filename) => filename.includes(search_filter));
+		total = filenames.length;
 
-		for (const filename of filenames) {
-
-			total++;
-
-			// skip later pages
-			if (count == entries_per_page)
-				continue;
-
-			// skip previous pages
-			if (total < (page_number - 1) * entries_per_page + 1)
-				continue;
+		for (let i = Math.max(0, (page_number - 1) * entries_per_page); i < Math.min(total, page_number * entries_per_page); i++) {
 			
-			count++;
 			construct += data
-				.replaceAll("[URL]", "/art/" + filename)
-				.replaceAll("[FILENAME]", filename.split(".", 1)[0]);
+				.replaceAll("[URL]", "/art/" + filenames[i])
+				.replaceAll("[FILENAME]", filenames[i].split(".", 1)[0]);
 				// [FILESIZE]?
 		}
 
