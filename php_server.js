@@ -28,7 +28,7 @@ function on_request(req, res) {
 		let filepath = req.url.split("?", 2)[0];
 		let query    = new URLSearchParams(req.url.split("?", 2)[1]);
 
-		if (req.url == "/")
+		if (filepath == "/")
 			filepath = "/index.php";
 
 		if (filepath.split(".").length != 2) // no /img/../sensitive_file on us!
@@ -70,25 +70,24 @@ function on_request(req, res) {
 
 function get_php(filepath, query) {
 
-	let file = fs.readFileSync("./home" + filepath, "utf-8");
+	let php = fs.readFileSync("./home" + filepath, "utf-8");
 	let total = 0;
 
 	const search_filter = query.get("search") || "";
 	const page_number = Number(query.get("page") || 1);
 	const entries_per_page = 10;
 
-	file = file.replace(/<\?php\s([^?]*)\?>/g, (all, data) => {
+	php = php.replace(/<\?php\s([^?]*)\?>/g, (all, data) => {
 
 		data = data.trim();
 
 		let construct = "";
 		let count = 0;
 
-		for (const filename of fs.readdirSync("./home/art/")) {
+		// filter out those not included in the search from total
+		const filenames = fs.readdirSync("./home/art/").filter((filename) => filename.includes(search_filter));
 
-			// filter out those not included in the search from total
-			if (!filename.includes(search_filter))
-				continue;
+		for (const filename of filenames) {
 
 			total++;
 
@@ -112,12 +111,12 @@ function get_php(filepath, query) {
 
 	const page_count = Math.ceil(total / entries_per_page);
 
-	file = file.replaceAll("[TOTAL]", total);
-	file = file.replaceAll("[SEARCH]", search_filter);
-	file = file.replaceAll("[PREV_PAGE_HREF]", page_number == 1          ? "" : `href="?search=${ search_filter }&page=${ page_number - 1 }"`);
-	file = file.replaceAll("[NEXT_PAGE_HREF]", page_number == page_count ? "" : `href="?search=${ search_filter }&page=${ page_number + 1 }"`);
-	file = file.replaceAll("[PAGE_NUMBER]", page_number);
-	file = file.replaceAll("[PAGE_COUNT]", page_count);
+	php = php.replaceAll("[TOTAL]", total);
+	php = php.replaceAll("[SEARCH]", search_filter);
+	php = php.replaceAll("[PREV_PAGE_HREF]", page_number == 1          ? "" : `href="?search=${ search_filter }&page=${ page_number - 1 }"`);
+	php = php.replaceAll("[NEXT_PAGE_HREF]", page_number == page_count ? "" : `href="?search=${ search_filter }&page=${ page_number + 1 }"`);
+	php = php.replaceAll("[PAGE_NUMBER]", page_number);
+	php = php.replaceAll("[PAGE_COUNT]", page_count);
 
-	return file;
+	return php;
 }
