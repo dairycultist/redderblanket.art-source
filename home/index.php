@@ -21,9 +21,16 @@
 <body>
     <main>
         <h1>RedderBlanket</h1>
-        <p>I've been drawing BBW/hyper for roughly 2 years. I especially like public sizediff. I want to make more sequences/short webcomics. I'm a <i>huge</i> perfectionist.</p>
+        <p>I've been drawing BBW/hyper for roughly 2 years. I especially like public sizediff. I want to make more sequences/short webcomics, and I want to try animation, but I'm a <i>huge</i> perfectionist so we'll see how that goes.</p>
         <p>I'm making this site in part in case DeviantArt screws me over. I don't plan on hosting all my art here, just the art that I'd like people to see, give or take.</p>
+        <p>I'm not drawing much right now because of bad wrist pain lol</p>
 
+        <p>
+            <strong>OCs:</strong>
+            <a href="?search=alien">[Alien (currently unnamed)]</a>
+            <a href="?search=daisy">[Daisy]</a>
+        </p>
+        
         <form action="index.php">
             <input type="text" name="search" placeholder="[SEARCH]">
             <input type="submit" value="Search">
